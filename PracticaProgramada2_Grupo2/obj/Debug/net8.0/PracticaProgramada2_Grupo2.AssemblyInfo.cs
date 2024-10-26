@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("PracticaProgramada2_Grupo#2")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("PracticaProgramada2_Grupo2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b71d8dd336a9f59df47b23b93cba19389c7fa5a3")]
-[assembly: System.Reflection.AssemblyProductAttribute("PracticaProgramada2_Grupo#2")]
-[assembly: System.Reflection.AssemblyTitleAttribute("PracticaProgramada2_Grupo#2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48888e17c7025851213590e8f3fbf7fb5389642c")]
+[assembly: System.Reflection.AssemblyProductAttribute("PracticaProgramada2_Grupo2")]
+[assembly: System.Reflection.AssemblyTitleAttribute("PracticaProgramada2_Grupo2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.
