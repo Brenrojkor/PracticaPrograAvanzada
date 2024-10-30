@@ -2,30 +2,31 @@
 using Microsoft.EntityFrameworkCore;
 using PracticaProgramada2_Grupo2.Data;
 using PracticaProgramada2_Grupo2.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace PracticaProgramada2_Grupo2.Controllers
 {
-    public class UsuarioController : ControllerBase
+    public class PlaylistController : ControllerBase
     {
         private readonly MinombredeconexionDbContext _contextAcceso;
 
-        public UsuarioController(MinombredeconexionDbContext contextAcceso) 
+        public PlaylistController(MinombredeconexionDbContext contextAcceso)
         {
             _contextAcceso = contextAcceso;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UsuarioModel>> ObtenerUsuarios()
+        public ActionResult<IEnumerable<PlaylistModel>> ObtenerPlaylists()
         {
-            return Ok(_contextAcceso.g2_usuarios.ToList());
+            return Ok(_contextAcceso.g2_playlists.ToList());
         }
 
         [HttpGet("{_id}")]
-        public ActionResult<IEnumerable<UsuarioModel>> ObtenerUsuarios(int _id) 
+        public ActionResult<IEnumerable<PlaylistModel>> ObtenerPlaylists(int _id)
         {
-            var datos = _contextAcceso.g2_usuarios.Find(_id);
+            var datos = _contextAcceso.g2_playlists.Find(_id);
 
-            if (datos == null) 
+            if (datos == null)
             {
                 return NotFound("El dato buscado no existe. ");
             }
@@ -34,31 +35,27 @@ namespace PracticaProgramada2_Grupo2.Controllers
         }
 
         [HttpPost]
-        public IActionResult AgregarUsuario(UsuarioModel _datos)
+        public IActionResult AgregarPlaylist(PlaylistModel _datos)
         {
-
-            try 
+            try
             {
-                _contextAcceso.g2_usuarios.Add(_datos);
+                _contextAcceso.g2_playlists.Add(_datos);
                 _contextAcceso.SaveChanges();
 
-                return Ok("Usuario insertado exitosamente. ");
-
+                return Ok("Playlist insertada exitosamente. ");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
-
         }
 
         [HttpPut]
-        public IActionResult ModificarUsuario(UsuarioModel _datos)
+        public IActionResult ModificarPlaylist(PlaylistModel _datos)
         {
-            
             try
             {
-                if (!ConsultarDatos(_datos.Id_Usuario))
+                if (!ConsultarDatos(_datos.Id_Playlist))
                 {
                     return NotFound("El dato buscado no existe. ");
                 }
@@ -66,18 +63,16 @@ namespace PracticaProgramada2_Grupo2.Controllers
                 _contextAcceso.Entry(_datos).State = EntityState.Modified;
                 _contextAcceso.SaveChanges();
 
-                return Ok("Usuario modificado exitosamente. ");
-
+                return Ok("Playlist modificada exitosamente. ");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
-
         }
 
-        [HttpDelete]
-        public ActionResult EliminarUsuario(int _id)
+        [HttpDelete("{_id}")]
+        public ActionResult EliminarPlaylists(int _id)
         {
             try
             {
@@ -86,14 +81,13 @@ namespace PracticaProgramada2_Grupo2.Controllers
                     return NotFound("El dato buscado no existe. ");
                 }
 
-                var datos = _contextAcceso.g2_usuarios.Find(_id);
+                var datos = _contextAcceso.g2_playlists.Find(_id);
 
-                _contextAcceso.g2_usuarios.Remove(datos);
+                _contextAcceso.g2_playlists.Remove(datos);
                 _contextAcceso.SaveChanges();
 
-                return Ok($"Se elimino el registro {_id}. ");
+                return Ok($"Se eliminó el registro {_id}");
             }
-
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
@@ -102,7 +96,7 @@ namespace PracticaProgramada2_Grupo2.Controllers
 
         private bool ConsultarDatos(int _id)
         {
-            return _contextAcceso.g2_usuarios.Any(x => x.Id_Usuario == _id);
+            return _contextAcceso.g2_playlists.Any(x => x.Id_Playlist == _id);
         }
     }
 }
