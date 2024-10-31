@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj": {}
+    "C:\\xampp\\htdocs\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj": {
+    "C:\\xampp\\htdocs\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj",
+        "projectUniqueName": "C:\\xampp\\htdocs\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj",
         "projectName": "PracticaProgramada2_Grupo2",
-        "projectPath": "C:\\Projects\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj",
-        "packagesPath": "C:\\Users\\josea\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\obj\\",
+        "projectPath": "C:\\xampp\\htdocs\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\PracticaProgramada2_Grupo2.csproj",
+        "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
+        "outputPath": "C:\\xampp\\htdocs\\PracticaPrograAvanzada\\PracticaProgramada2_Grupo2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\josea\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
