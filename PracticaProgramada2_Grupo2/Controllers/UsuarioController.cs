@@ -2,107 +2,69 @@
 using Microsoft.EntityFrameworkCore;
 using PracticaProgramada2_Grupo2.Data;
 using PracticaProgramada2_Grupo2.Models;
+using System.Threading.Tasks;
 
 namespace PracticaProgramada2_Grupo2.Controllers
 {
-    public class UsuarioController : ControllerBase
+    public class UsuarioController : Controller
     {
         private readonly MinombredeconexionDbContext _contextAcceso;
 
-        public UsuarioController(MinombredeconexionDbContext contextAcceso) 
+        public UsuarioController(MinombredeconexionDbContext contextAcceso)
         {
             _contextAcceso = contextAcceso;
         }
 
+        // GET: Usuario/Register
         [HttpGet]
-        public ActionResult<IEnumerable<UsuarioModel>> ObtenerUsuarios()
+        public IActionResult Registro()
         {
-            return Ok(_contextAcceso.g2_usuarios.ToList());
+            return View("~/Views/Home/Registro.cshtml");
         }
 
-        [HttpGet("{_id}")]
-        public ActionResult<IEnumerable<UsuarioModel>> ObtenerUsuarios(int _id) 
-        {
-            var datos = _contextAcceso.g2_usuarios.Find(_id);
-
-            if (datos == null) 
-            {
-                return NotFound("El dato buscado no existe. ");
-            }
-
-            return Ok(datos);
-        }
-
+        // POST: Usuario/Register
         [HttpPost]
-        public IActionResult AgregarUsuario(UsuarioModel _datos)
+        public async Task<IActionResult> Registro(string Usuario, string Contraseña)
         {
-
-            try 
+            var existingUser = await _contextAcceso.G2_Usuarios.FirstOrDefaultAsync(u => u.Usuario == Usuario);
+            if (existingUser != null)
             {
-                _contextAcceso.g2_usuarios.Add(_datos);
-                _contextAcceso.SaveChanges();
-
-                return Ok("Usuario insertado exitosamente. ");
-
-            }
-            catch (Exception ex) 
-            {
-                return StatusCode(500, ex.Message);
+                ModelState.AddModelError("usuario", "Este usuario ya existe.");
+                return View("~/Views/Home/Registro.cshtml");
             }
 
+            var newUser = new UsuarioModel
+            {
+                Usuario = Usuario,
+                Contraseña = Contraseña
+            };
+
+            _contextAcceso.G2_Usuarios.Add(newUser);
+            await _contextAcceso.SaveChangesAsync();
+            return RedirectToAction("IniciarSesion", "Usuario");
         }
 
-        [HttpPut]
-        public IActionResult ModificarUsuario(UsuarioModel _datos)
+        // GET: Usuario/Login
+        [HttpGet]
+        public IActionResult IniciarSesion()
         {
-            
-            try
-            {
-                if (!ConsultarDatos(_datos.Id_Usuario))
-                {
-                    return NotFound("El dato buscado no existe. ");
-                }
-
-                _contextAcceso.Entry(_datos).State = EntityState.Modified;
-                _contextAcceso.SaveChanges();
-
-                return Ok("Usuario modificado exitosamente. ");
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-
+            return View("~/Views/Home/IniciarSesion.cshtml");
         }
 
-        [HttpDelete]
-        public ActionResult EliminarUsuario(int _id)
+        // POST: Usuario/Login
+        [HttpPost]
+        public IActionResult Login(string Usuario, string Contraseña)
         {
-            try
+            var user = _contextAcceso.G2_Usuarios
+                .FirstOrDefault(u => u.Usuario == Usuario && u.Contraseña == Contraseña);
+
+            if (user != null)
             {
-                if (!ConsultarDatos(_id))
-                {
-                    return NotFound("El dato buscado no existe. ");
-                }
-
-                var datos = _contextAcceso.g2_usuarios.Find(_id);
-
-                _contextAcceso.g2_usuarios.Remove(datos);
-                _contextAcceso.SaveChanges();
-
-                return Ok($"Se elimino el registro {_id}. ");
+                return RedirectToAction("Index", "Home");
             }
 
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        private bool ConsultarDatos(int _id)
-        {
-            return _contextAcceso.g2_usuarios.Any(x => x.Id_Usuario == _id);
+            ModelState.AddModelError("", "Usuario o contraseña incorrectos");
+            return View("~/Views/Home/IniciarSesion.cshtml");
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿@model PracticaProgramada2_Grupo2.Models.UsuarioModel
 
-<h2>Registro</h2>
+<h2>Iniciar Sesión</h2>
 
-<form asp-action="Registro" method="post">
+<form asp-action="Login" method="post">
     <div class="form-group">
         <label>Nombre de Usuario</label>
         <input asp-for="Usuario" class="form-control" />
@@ -13,5 +13,5 @@
         <input asp-for="Contraseña" type="password" class="form-control" />
         <span asp-validation-for="Contraseña" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Registrar</button>
+    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
 </form>
