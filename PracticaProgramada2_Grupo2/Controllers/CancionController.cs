@@ -17,13 +17,13 @@ namespace PracticaProgramada2_Grupo2.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CancionModel>> ObtenerCanciones()
         {
-            return Ok(_contextAcceso.g2_canciones.ToList());
+            return Ok(_contextAcceso.G2_Canciones.ToList());
         }
 
         [HttpGet("{_id}")]
         public ActionResult<IEnumerable<CancionModel>> ObtenerCanciones(int _id)
         {
-            var datos = _contextAcceso.g2_canciones.Find(_id);
+            var datos = _contextAcceso.G2_Canciones.Find(_id);
 
             if (datos == null)
             {
@@ -38,7 +38,7 @@ namespace PracticaProgramada2_Grupo2.Controllers
         {
             try
             {
-                _contextAcceso.g2_canciones.Add(_datos);
+                _contextAcceso.G2_Canciones.Add(_datos);
                 _contextAcceso.SaveChanges();
 
                 return Ok("Canción insertada exitosamente. ");
@@ -81,9 +81,9 @@ namespace PracticaProgramada2_Grupo2.Controllers
                     return NotFound("El datos buscado no existe. ");
                 }
 
-                var datos = _contextAcceso.g2_canciones.Find(_id);
+                var datos = _contextAcceso.G2_Canciones.Find(_id);
 
-                _contextAcceso.g2_canciones.Remove(datos);
+                _contextAcceso.G2_Canciones.Remove(datos);
                 _contextAcceso.SaveChanges();
 
                 return Ok($"Se eliminó el registro {_id}");
@@ -96,7 +96,7 @@ namespace PracticaProgramada2_Grupo2.Controllers
 
         private bool ConsultarDatos(int _id)
         {
-            return _contextAcceso.g2_canciones.Any(x => x.Id_Cancion == _id);
+            return _contextAcceso.G2_Canciones.Any(x => x.Id_Cancion == _id);
         }
     }
 }

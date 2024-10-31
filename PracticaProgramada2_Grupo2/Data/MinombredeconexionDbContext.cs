@@ -9,15 +9,15 @@ namespace PracticaProgramada2_Grupo2.Data
         public MinombredeconexionDbContext(DbContextOptions<MinombredeconexionDbContext> options) 
         : base(options) { }
 
-        public DbSet<UsuarioModel> g2_usuarios { get; set; }
-        public DbSet<CancionModel> g2_canciones { get; set; }
-        public DbSet<PlaylistModel> g2_playlists { get; set; }
+        public DbSet<UsuarioModel> G2_Usuarios { get; set; }
+        public DbSet<CancionModel> G2_Canciones { get; set; }
+        public DbSet<PlaylistModel> G2_Playlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UsuarioModel>().ToTable("g2_usuarios");
-            modelBuilder.Entity<CancionModel>().ToTable("g2_canciones");
-            modelBuilder.Entity<PlaylistModel>().ToTable("g2_playlists");
+            modelBuilder.Entity<UsuarioModel>().ToTable("G2_Usuarios");
+            modelBuilder.Entity<CancionModel>().ToTable("G2_Canciones");
+            modelBuilder.Entity<PlaylistModel>().ToTable("G2_Playlists");
         }
     }
 }
