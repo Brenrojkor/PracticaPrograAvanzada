@@ -3,8 +3,6 @@ using MySqlConnector;
 
 namespace PracticaProgramada2_Grupo2.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class ConexionController : ControllerBase
     {
         private readonly IConfiguration _configuration;
