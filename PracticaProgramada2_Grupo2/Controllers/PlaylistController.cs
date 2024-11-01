@@ -2,101 +2,120 @@
 using Microsoft.EntityFrameworkCore;
 using PracticaProgramada2_Grupo2.Data;
 using PracticaProgramada2_Grupo2.Models;
-using System.Reflection.Metadata.Ecma335;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PracticaProgramada2_Grupo2.Controllers
 {
-    public class PlaylistController : ControllerBase
+    public class PlaylistController : Controller
     {
-        private readonly MinombredeconexionDbContext _contextAcceso;
+        private readonly MinombredeconexionDbContext _context;
 
-        public PlaylistController(MinombredeconexionDbContext contextAcceso)
+        public PlaylistController(MinombredeconexionDbContext context)
         {
-            _contextAcceso = contextAcceso;
+            _context = context;
         }
 
+        // GET: Playlist
         [HttpGet]
-        public ActionResult<IEnumerable<PlaylistModel>> ObtenerPlaylists()
+        public async Task<IActionResult> Index()
         {
-            return Ok(_contextAcceso.G2_Playlists.ToList());
+            var playlists = await _context.G2_Playlists.ToListAsync();
+            return View(playlists);
         }
 
-        [HttpGet("{_id}")]
-        public ActionResult<IEnumerable<PlaylistModel>> ObtenerPlaylists(int _id)
+        // GET: Playlist/{id}
+        public async Task<IActionResult> Detalle(int id)
         {
-            var datos = _contextAcceso.G2_Playlists.Find(_id);
-
-            if (datos == null)
+            var playlist = await _context.G2_Playlists.FindAsync(id);
+            if (playlist == null)
             {
-                return NotFound("El dato buscado no existe. ");
+                return NotFound("La playlist no existe en el sistema. ");
             }
 
-            return Ok(datos);
+            return View(playlist);
+        } 
+
+        // GET: Playlist/Agregar
+        public IActionResult Agregar()
+        {
+            return View();
         }
 
+        // POST: Playlist/Agregar
         [HttpPost]
-        public IActionResult AgregarPlaylist(PlaylistModel _datos)
+        public async Task<IActionResult> Agregar(PlaylistModel nuevaPlaylist)
         {
-            try
+            if (string.IsNullOrWhiteSpace(nuevaPlaylist.Nombre_Playlist) || string.IsNullOrWhiteSpace(nuevaPlaylist.Nombre_Creador))
             {
-                _contextAcceso.G2_Playlists.Add(_datos);
-                _contextAcceso.SaveChanges();
+                ModelState.AddModelError("", "La información de la playlist no es válida. ");
+                return View(nuevaPlaylist);
+            }
 
-                return Ok("Playlist insertada exitosamente. ");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            _context.G2_Playlists.Add(nuevaPlaylist);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPut]
-        public IActionResult ModificarPlaylist(PlaylistModel _datos)
+        // GET: Playlist/Editar/{id}
+        public async Task<IActionResult> Editar(int id)
         {
-            try
+            var playlist = await _context.G2_Playlists.FindAsync(id);
+            if (playlist == null)
             {
-                if (!ConsultarDatos(_datos.Id_Playlist))
-                {
-                    return NotFound("El dato buscado no existe. ");
-                }
-
-                _contextAcceso.Entry(_datos).State = EntityState.Modified;
-                _contextAcceso.SaveChanges();
-
-                return Ok("Playlist modificada exitosamente. ");
+                return NotFound("La playlist no existe en el sistema. ");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            return View(playlist);
         }
 
-        [HttpDelete("{_id}")]
-        public ActionResult EliminarPlaylists(int _id)
+        // POST: Playlist/Editar/{id}
+        [HttpPost]
+        public async Task<IActionResult> Editar(int id, PlaylistModel playlistActualizada) 
         {
-            try
+            if (id != playlistActualizada.Id_Playlist) 
             {
-                if (!ConsultarDatos(_id))
-                {
-                    return NotFound("El dato buscado no existe. ");
-                }
-
-                var datos = _contextAcceso.G2_Playlists.Find(_id);
-
-                _contextAcceso.G2_Playlists.Remove(datos);
-                _contextAcceso.SaveChanges();
-
-                return Ok($"Se eliminó el registro {_id}");
+                return BadRequest("El ID de la playlist no coincide. ");
             }
-            catch (Exception ex)
+
+            if (string.IsNullOrWhiteSpace(playlistActualizada.Nombre_Playlist) || string.IsNullOrWhiteSpace(playlistActualizada.Nombre_Creador))
             {
-                return StatusCode(500, ex.Message);
+                ModelState.AddModelError("", "La información de la playlist no es válida. ");
+                return View(playlistActualizada);
             }
+
+            var playlist = await _context.G2_Playlists.FindAsync(id);
+            if (playlist == null)
+            {
+                return NotFound("La playlist no existe en el sistema. ");
+            }
+
+            // Actualizar los datos de la playlist
+            playlist.Nombre_Playlist = playlistActualizada.Nombre_Playlist;
+            playlist.Nombre_Creador = playlistActualizada.Nombre_Creador;
+            playlist.Descripcion_Playlist = playlistActualizada.Descripcion_Playlist;
+            playlist.Genero_Playlist = playlistActualizada.Genero_Playlist;
+
+            _context.Entry(playlist).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        private bool ConsultarDatos(int _id)
+        // POST: Playlist/Eliminar/{id}
+        [HttpPost]
+        public async Task<IActionResult> Eliminar(int id)
         {
-            return _contextAcceso.G2_Playlists.Any(x => x.Id_Playlist == _id);
+            var playlist = await _context.G2_Playlists.FindAsync(id);
+            if (playlist == null)
+            {
+                return NotFound("La playlisy no existe en el sistema. ");
+            }
+
+            _context.G2_Playlists.Remove(playlist);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
