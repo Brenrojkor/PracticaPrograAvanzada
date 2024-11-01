@@ -1,4 +1,51 @@
 ﻿@model PracticaProgramada2_Grupo2.Models.PlaylistModel
 
-<h2>Playlist</h2>
-<p>Aquí podrás gestionar tus playlists.</p>
+@{
+    ViewData["Title"] = "Gestión de Playlists";
+}
+
+<h2><@ViewData["Title"]/h2>
+
+        <div class="container">
+            <form asp-action="AgregarPlaylist" method="post" asp-controller="Playlist" class="mb-3">
+                <div class="form-group">
+                    <label asp-for="Nombre_Playlist" class="form-label">Nombre de la Playlist</label>
+                    <input asp-for="Nombre_Playlist" class="form-control" />
+                    <span asp-validation-for="Nombre_Playlist" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Nombre_Creador" class="form-label">Nombre del Creador</label>
+                    <input asp-for="Nombre_Creador" class="form-control" />
+                    <span asp-validation-for="Nombre_Creador" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Descripcion_Playlist" class="form-label">Descripción de la Playlist</label>
+                    <input asp-for="Descripcion_Playlist" class="form-control" />
+                    <span asp-validation-for="Descripcion_Playlist" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Genero_Playlist" class="form-label">Género de la Playlist</label>
+                    <input asp-for="Genero_Playlist" class="form-control" />
+                    <span asp-validation-for="Genero_Playlist" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Guardar Playlist</button>
+            </form>
+
+            <h3>Lista de Playlists</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Creador</th>
+                        <th>Descripción</th>
+                        <th>Género</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+    @section Scripts {
+            <partial name="_ValidationScriptsPartial" />
+    }
