@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PracticaProgramada2_Grupo2.Data;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using PracticaProgramada2_Grupo2.Data;
 using PracticaProgramada2_Grupo2.Models;
 
 namespace PracticaProgramada2_Grupo2.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class CancionController : ControllerBase
     {
         private readonly MinombredeconexionDbContext _contextAcceso;
@@ -14,89 +19,86 @@ namespace PracticaProgramada2_Grupo2.Controllers
             _contextAcceso = contextAcceso;
         }
 
+        // GET: api/Cancion
         [HttpGet]
-        public ActionResult<IEnumerable<CancionModel>> ObtenerCanciones()
+        public async Task<IActionResult> ObtenerCanciones()
         {
-            return Ok(_contextAcceso.G2_Canciones.ToList());
+            var canciones = await _contextAcceso.G2_Canciones.ToListAsync();
+            return Ok(canciones);
         }
 
-        [HttpGet("{_id}")]
-        public ActionResult<IEnumerable<CancionModel>> ObtenerCanciones(int _id)
+        // GET: api/Cancion/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObtenerCancion(int id)
         {
-            var datos = _contextAcceso.G2_Canciones.Find(_id);
-
-            if (datos == null)
+            var cancion = await _contextAcceso.G2_Canciones.FindAsync(id);
+            if (cancion == null)
             {
-                return NotFound("El dato buscado no existe. ");
+                return NotFound("La canción no existe en el sistema.");
             }
-
-            return Ok(datos);
+            return Ok(cancion);
         }
 
+
+        // POST: api/Cancion
         [HttpPost]
-        public IActionResult AgregarCancion(CancionModel _datos)
+        public async Task<IActionResult> AgregarCancion([FromBody] CancionModel nuevaCancion)
         {
-            try
+            if (string.IsNullOrWhiteSpace(nuevaCancion.Titulo) || string.IsNullOrWhiteSpace(nuevaCancion.Artista))
             {
-                _contextAcceso.G2_Canciones.Add(_datos);
-                _contextAcceso.SaveChanges();
-
-                return Ok("Canción insertada exitosamente. ");
-
+                return BadRequest("La información de la canción no es válida.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+
+            _contextAcceso.G2_Canciones.Add(nuevaCancion);
+            await _contextAcceso.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(ObtenerCancion), new { id = nuevaCancion.Id_Cancion }, nuevaCancion);
         }
 
-        [HttpPut]
-        public IActionResult ModificarCancion(CancionModel _datos)
+        // DELETE: api/Cancion/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> BorrarCancion(int id)
         {
-            try
+            var cancion = await _contextAcceso.G2_Canciones.FindAsync(id);
+            if (cancion == null)
             {
-                if (!ConsultarDatos(_datos.Id_Cancion))
-                {
-                    return NotFound("El dato buscado no existe. ");
-                }
-
-                _contextAcceso.Entry(_datos).State = EntityState.Modified;
-                _contextAcceso.SaveChanges();
-
-                return Ok("Canción modificada exitosamente.");
+                return NotFound("La canción no existe en el sistema.");
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+
+            _contextAcceso.G2_Canciones.Remove(cancion);
+            await _contextAcceso.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        [HttpDelete("{_id}")]
-        public ActionResult EliminarCanciones(int _id)
+        // PUT: api/Cancion/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActualizarCancion(int id, [FromBody] CancionModel cancionActualizada)
         {
-            try
+            if (id != cancionActualizada.Id_Cancion)
             {
-                if (!ConsultarDatos(_id))
-                {
-                    return NotFound("El datos buscado no existe. ");
-                }
-
-                var datos = _contextAcceso.G2_Canciones.Find(_id);
-
-                _contextAcceso.G2_Canciones.Remove(datos);
-                _contextAcceso.SaveChanges();
-
-                return Ok($"Se eliminó el registro {_id}");
+                return BadRequest("El ID de la canción no coincide.");
             }
-            catch (Exception ex)
+
+            if (string.IsNullOrWhiteSpace(cancionActualizada.Titulo) || string.IsNullOrWhiteSpace(cancionActualizada.Artista))
             {
-                return StatusCode(500, ex.Message);
+                return BadRequest("La información de la canción no es válida.");
             }
-        }
 
-        private bool ConsultarDatos(int _id)
-        {
-            return _contextAcceso.G2_Canciones.Any(x => x.Id_Cancion == _id);
+            var cancion = await _contextAcceso.G2_Canciones.FindAsync(id);
+            if (cancion == null)
+            {
+                return NotFound("La canción no existe en el sistema.");
+            }
+
+            // Actualizar los datos de la canción
+            cancion.Titulo = cancionActualizada.Titulo;
+            cancion.Artista = cancionActualizada.Artista;
+
+            _contextAcceso.Entry(cancion).State = EntityState.Modified;
+            await _contextAcceso.SaveChangesAsync();
+
+            return Ok($"Canción modificada exitosamente, ID: {id}");
         }
     }
 }

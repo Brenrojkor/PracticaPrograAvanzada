@@ -23,6 +23,17 @@ namespace PracticaProgramada2_Grupo2.Controllers
             return View();
         }
 
+        public IActionResult Canciones()
+        {
+            return View();
+        }
+
+        public IActionResult Playlist()
+        {
+            return View();
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

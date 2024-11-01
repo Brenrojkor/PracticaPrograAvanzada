@@ -1,5 +1,41 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model PracticaProgramada2_Grupo2.Models.CancionModel
+
+
+
 @{
+    ViewData["Title"] = "Gestión de Canciones";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container">
+    <form asp-action="AgregarCancion" method="post" asp-controller="Cancion" class="mb-3">
+        <div class="form-group">
+            <label asp-for="Titulo" class="form-label">Título</label>
+            <input asp-for="Titulo" class="form-control" />
+            <span asp-validation-for="Titulo" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Artista" class="form-label">Artista</label>
+            <input asp-for="Artista" class="form-control" />
+            <span asp-validation-for="Artista" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Guardar Canción</button>
+    </form>
+
+    <h3>Lista de Canciones</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }
